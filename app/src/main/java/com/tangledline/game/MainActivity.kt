@@ -1,8 +1,10 @@
 package com.tangledline.game
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Vibrator
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
@@ -231,6 +233,19 @@ class MainActivity : AppCompatActivity() {
         fun getSavedLevel(): Int {
             return getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                 .getInt(KEY_SAVED_LEVEL, 1)
+        }
+
+        @JavascriptInterface
+        fun vibrate(duration: Long) {
+            try {
+                val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                if (vibrator.hasVibrator()) {
+                    @Suppress("DEPRECATION")
+                    vibrator.vibrate(duration)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Vibration failed", e)
+            }
         }
     }
 
