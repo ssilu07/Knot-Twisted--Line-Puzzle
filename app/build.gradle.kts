@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace = "com.tangledline.game"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.tangledline.game"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 5
-        versionName = "1.4"
+        targetSdk = 36
+        versionCode = 7
+        versionName = "1.6"
     }
 
     buildFeatures {

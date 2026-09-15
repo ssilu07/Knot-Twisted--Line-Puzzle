@@ -55,6 +55,6 @@ TangledLine/
 5. APK will be in `app/build/outputs/apk/release/`
 
 ## Troubleshooting
-- **Gradle sync fails?** → Make sure you have Android SDK 34 installed
+- **Gradle sync fails?** → Make sure you have Android SDK 36 installed
 - **WebView blank?** → Check that `game.html` is in `app/src/main/assets/`
 - **Sound not working?** → Tap the 🔊 button in-game (requires user interaction first)
