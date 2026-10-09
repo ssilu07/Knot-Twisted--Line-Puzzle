@@ -12,3 +12,8 @@
 *.jks
 *.keystore
 .claude
+# Play Store API & Service Account keys
+*service-account*.json
+*play-key*.json
+*play-store*.json
+*.pepk
