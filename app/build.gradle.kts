@@ -11,8 +11,10 @@ android {
         applicationId = "com.tangledline.game"
         minSdk = 24
         targetSdk = 36
-        versionCode = System.getenv("VERSION_CODE")?.toIntOrNull() ?: 7
-        versionName = System.getenv("VERSION_NAME") ?: "1.6"
+        val runNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0
+        val baseVersionCode = 7
+        versionCode = System.getenv("VERSION_CODE")?.toIntOrNull() ?: if (runNumber > 0) (baseVersionCode + runNumber) else baseVersionCode
+        versionName = System.getenv("VERSION_NAME") ?: if (runNumber > 0) "1.6.${runNumber}" else "1.6"
     }
 
     signingConfigs {
