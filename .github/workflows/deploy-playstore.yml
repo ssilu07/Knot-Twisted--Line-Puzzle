@@ -76,3 +76,22 @@ jobs:
           track: ${{ github.event.inputs.track || 'internal' }}
           status: completed
 
+      - name: Set up Python for Metadata Sync
+        if: ${{ secrets.PLAY_STORE_JSON_KEY != '' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Google API Libraries
+        if: ${{ secrets.PLAY_STORE_JSON_KEY != '' }}
+        run: pip install google-api-python-client google-auth
+
+      - name: Update Play Store Listing (ASO Metadata)
+        if: ${{ secrets.PLAY_STORE_JSON_KEY != '' }}
+        continue-on-error: true
+        env:
+          PLAY_STORE_JSON_KEY: ${{ secrets.PLAY_STORE_JSON_KEY }}
+          PACKAGE_NAME: com.tangledline.game
+        run: python scripts/update-playstore-listing.py
+
+
