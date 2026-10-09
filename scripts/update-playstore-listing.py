@@ -4,6 +4,7 @@ import json
 import argparse
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 
 DEFAULT_PACKAGE_NAME = "com.tangledline.game"
 DEFAULT_LOCALE = "en-US"
@@ -24,6 +25,10 @@ def get_credentials(key_input):
 
 def read_listing_files(base_dir, locale):
     locale_dir = os.path.join(base_dir, "playstore", "listing", locale)
+    if not os.path.exists(locale_dir):
+        # Fallback to en-US if locale directory does not exist
+        locale_dir = os.path.join(base_dir, "playstore", "listing", "en-US")
+
     title_path = os.path.join(locale_dir, "title.txt")
     short_desc_path = os.path.join(locale_dir, "short_description.txt")
     full_desc_path = os.path.join(locale_dir, "full_description.txt")
@@ -45,6 +50,7 @@ def main():
     parser.add_argument("--key", help="Path to Google Cloud Service Account JSON key or JSON string")
     parser.add_argument("--package", default=DEFAULT_PACKAGE_NAME, help="Android package name")
     parser.add_argument("--locale", default=DEFAULT_LOCALE, help="Listing locale (default: en-US)")
+    parser.add_argument("--upload-screenshots", action="store_true", help="Upload screenshots from playstore/screenshots/")
     args = parser.parse_args()
 
     key_input = args.key or os.environ.get("SERVICE_ACCOUNT_JSON") or os.environ.get("PLAY_STORE_JSON_KEY")
@@ -89,6 +95,30 @@ def main():
         body=listing_body
     ).execute()
     print("Store listing successfully staged.")
+
+    if args.upload_screenshots:
+        screenshots_dir = os.path.join(project_root, "playstore", "screenshots")
+        if os.path.exists(screenshots_dir):
+            screenshot_files = sorted([
+                os.path.join(screenshots_dir, f) for f in os.listdir(screenshots_dir)
+                if f.lower().endswith((".png", ".jpg", ".jpeg"))
+            ])
+            if screenshot_files:
+                print(f"Uploading {len(screenshot_files)} screenshots for [{locale}]...")
+                service.edits().images().deleteall(
+                    packageName=package_name, editId=edit_id, language=locale, imageType="phoneScreenshots"
+                ).execute()
+                for sf in screenshot_files:
+                    mimetype = "image/png" if sf.lower().endswith(".png") else "image/jpeg"
+                    media = MediaFileUpload(sf, mimetype=mimetype)
+                    service.edits().images().upload(
+                        packageName=package_name,
+                        editId=edit_id,
+                        language=locale,
+                        imageType="phoneScreenshots",
+                        media_body=media
+                    ).execute()
+                    print(f"Uploaded screenshot: {os.path.basename(sf)}")
 
     print(f"Committing edit ID {edit_id} to Google Play Store...")
     commit_response = service.edits().commit(packageName=package_name, editId=edit_id).execute()
