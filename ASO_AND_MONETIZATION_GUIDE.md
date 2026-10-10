@@ -116,7 +116,7 @@ Store par log description baad me padhte hain, pehle **Screenshots** dekhte hain
    * *Headline:* **UNTANGLE THE KNOTS!**
 2. **Screenshot 2 (Progression):**
    * *Visual:* Level 25+ complex layout with crossings badge.
-   * *Headline:* **100+ BRAIN-TWISTING LEVELS!**
+   * *Headline:* **1,000+ BRAIN-TWISTING LEVELS!**
 3. **Screenshot 3 (Game Modes):**
    * *Visual:* Mode selection screen (Classic, Time Attack, Zen).
    * *Headline:* **MULTIPLE EXCITING MODES!**
